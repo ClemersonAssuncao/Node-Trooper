@@ -1,0 +1,26 @@
+{
+  "name": "node-trooper",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "trooper": "./bin/index.js"
+  },
+  "files": [
+    "bin",
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "app": "app",
+    "compile": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.12.10",
+    "commander": "^12.0.0",
+    "typescript": "^5.4.5",
+    "zx": "^8.0.2"
+  }
+}
