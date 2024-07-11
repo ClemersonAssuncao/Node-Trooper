@@ -1,17 +1,8 @@
 {
   "name": "node-trooper",
   "version": "1.0.0",
-  "description": "",
-  "bin": {
-    "trooper": "./bin/index.js"
-  },
-  "files": [
-    "bin",
-    "dist"
-  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "app": "app",
+    "start": "node -r ts-node/register index.ts",
     "compile": "tsc"
   },
   "keywords": [],
@@ -19,8 +10,12 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.12.10",
-    "commander": "^12.0.0",
+    "commander": "^12.1.0",
     "typescript": "^5.4.5",
     "zx": "^8.0.2"
+  },
+  "dependencies": {
+    "@commander-js/extra-typings": "^12.1.0",
+    "ts-node": "^10.9.2"
   }
 }
