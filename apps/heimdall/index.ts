@@ -1,11 +1,12 @@
+import { App } from "../../src/commons/types";
 
+export function teste (app: App) {
+console.log("Executado novo método teste");
+}
 
-
-function version(link: string, versions: Array<string> ){
   
+export function teste2 (app: App) {
+  console.log("Executado novo método teste2");
 }
 
-
-export {
-  version
-}
+  

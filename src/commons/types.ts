@@ -6,7 +6,7 @@ type App = {
 
 type AppConfig = {
   filePath: string;
-  values?: any[];
+  values?: any[] | any | {};
 }
 
 export {
