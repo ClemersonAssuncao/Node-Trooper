@@ -6,19 +6,42 @@ import path from 'path';
 const FILE_NAME = 'config.json';
 const FILE_PATH = process.env.APPDATA + '/NodeTrooper/';
 
-function apply(app: App, options: any): void {
+function load(app: App, options: any): AppConfig {
+
+  const appConfig: AppConfig = {
+    filePath: path.join(FILE_PATH, app.name)
+  };
+  appConfig.values = loadFile(appConfig);
+
+  for (const option in options) {
+    if (option == 'remove'){
+      remove(appConfig, options.remove);
+    }
+    if (option == 'config'){
+      apply(appConfig, options.config);
+    }
+  }
+  save(appConfig);
   
-  app.config = load(app);
-
-  const optionsConfig = options && arrayToObject(options) || {};
-  app.config.values = {...app.config.values, ...optionsConfig};
-
-  save(app.config);
+  return appConfig;
 }
 
-function remove(app: App, options: any): void {
+function apply(appConfig: AppConfig, options: any): void {
+  const optionsConfig = options && arrayToObject(options) || {};
   
-  const appConfig = load(app);
+  if (!appConfig){
+    return;
+  }
+
+  appConfig.values = {...appConfig.values, ...optionsConfig};
+
+}
+
+function remove(appConfig: AppConfig, options: any): void {
+
+  if (!appConfig){
+    return;
+  }
 
   if (appConfig.values){
     for (const option of options) {   
@@ -26,24 +49,7 @@ function remove(app: App, options: any): void {
         delete appConfig.values[option];
     }
   }
-  app.config = appConfig;
 
-  save(app.config);
-}
-
-function load(app: App): AppConfig {
-
-  if (app.config){
-    return app.config
-  }
-  
-  const appConfig: AppConfig = {
-    filePath: path.join(FILE_PATH, app.name)
-  };
-
-  appConfig.values = loadFile(appConfig);
-
-  return appConfig;
 }
 
 function loadFile(appConfig: AppConfig): any{
@@ -66,5 +72,6 @@ function save(appConfig:AppConfig){
 
 export {
   apply,
-  remove
+  remove,
+  load
 }
