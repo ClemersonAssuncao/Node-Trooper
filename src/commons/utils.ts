@@ -32,9 +32,19 @@ function arrayToObject(params: string[]): any[] {
   return result;
 }
 
+function getFunctionParameters(func: Function): string[]|void{
+  const funcString = func.toString();
+  const funcMatch = funcString.match(/\(([^)]*)\)/);
+  
+  if (funcMatch){ 
+    const paramsString = funcMatch[1];
+    return paramsString.split(',').map(param => param.trim()).filter(param => param != 'app');
+  }  
+}
 
 
 export {
   arrayToObject,
-  isReservedWord
+  isReservedWord,
+  getFunctionParameters
 }

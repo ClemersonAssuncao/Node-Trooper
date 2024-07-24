@@ -7,10 +7,10 @@ const FILE_NAME = 'config.json';
 const FILE_PATH = process.env.APPDATA + '/NodeTrooper/';
 
 function load(app: App, options: any): AppConfig {
-
   const appConfig: AppConfig = {
     filePath: path.join(FILE_PATH, app.name)
   };
+  
   appConfig.values = loadFile(appConfig);
 
   for (const option in options) {
@@ -34,7 +34,6 @@ function apply(appConfig: AppConfig, options: any): void {
   }
 
   appConfig.values = {...appConfig.values, ...optionsConfig};
-
 }
 
 function remove(appConfig: AppConfig, options: any): void {
@@ -49,7 +48,6 @@ function remove(appConfig: AppConfig, options: any): void {
         delete appConfig.values[option];
     }
   }
-
 }
 
 function loadFile(appConfig: AppConfig): any{

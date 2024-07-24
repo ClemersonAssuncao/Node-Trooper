@@ -1,18 +1,17 @@
 import { isReservedWord } from "../../commons/utils";
 
-function validateName(functionName: string, params: any){
-  console.log(functionName)
+function getReservedName(functionName: string, params: any){
   if (isReservedWord(functionName)){
-    throw new Error(`O nome da função ${functionName} é uma palavra reservada do Javascript, escolha outro nome`);
+    return functionName;
   }
 
   for (const param of params) {
     if (isReservedWord(param)){
-      throw new Error(`O nome do parametro ${param} é uma palavra reservada do Javascript, escolha outro nome`);
+      return param;
     }
   }
 }
 
 export {
-  validateName
+  getReservedName
 }

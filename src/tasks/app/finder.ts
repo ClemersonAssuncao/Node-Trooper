@@ -1,15 +1,16 @@
-import fs from 'fs';
-import type { App } from '../../commons/types';
-import path from 'path';
+import type { ActionCommand, App } from '../../commons/types';
+import { logAppNotFound, logFunctionNotFound } from '../log/log-message';
+import { createApp, createFunction } from '../generator/app-generator';
 import { load as loadConfiguration } from '../controll/configuration';
-import { createApp } from '../controll/app-generator';
+import fs from 'fs';
+import path from 'path';
+import { Index } from '../generator/index-file';
 
 
-function instanceApp(app: App): App{
+function instanceApp(app: App): any{
   try {
     const pathName = path.join(__basedir, 'apps', app.name, 'index.ts');
-    app.instance = require(pathName);
-    console.log(pathName)
+    return require(pathName);
   } catch (ex){
     console.log(`Erro ao instanciar o app ${app.name}`, ex);
   }
@@ -17,21 +18,52 @@ function instanceApp(app: App): App{
   return app;
 }
 
-function getApp(appName: string, options: any ): App {
-  const module = fs.readdirSync("./apps/", { withFileTypes: true })
-                      .find(dir => dir.isDirectory() && dir.name == appName);
-  if (!module) {
-    if (options.new) {
-      createApp(appName);
+function existsFunction(app: App, functionName: string, args: any, createIfNotFound?:boolean): boolean {
+
+  const existFunction = app.instance[functionName];
+
+  if (!existFunction){
+    if (createIfNotFound) {
+      createFunction(app, functionName, args);
     } else {
-      throw new Error(`App ${appName} not found!`);
+      logFunctionNotFound(app, functionName);
     }
   }
-  const app: App = {name: appName};
-  
-  app.config = loadConfiguration(app, options);
+  return existFunction;
+}
 
-  return instanceApp(app);
+function existsApp(app:App, createIfNotFound:boolean): boolean {
+
+  const existApp = !!fs.readdirSync("./apps/", { withFileTypes: true })
+                              .find(dir => dir.isDirectory() && dir.name == app.name);
+  if (!existApp) {
+    if (createIfNotFound) {
+      createApp(app);
+    } else {
+      logAppNotFound(app.name);
+    }
+  }
+  return existApp;
+}
+
+function getApp(action: ActionCommand): App|void {
+
+  const app: App = {name: action.appName};
+
+  app.indexFile = new Index(action.appName);
+
+  if (!existsApp(app, action.options.new) && !action.options.new){
+    return;
+  }
+  
+  app.config = loadConfiguration(app, action.options);
+  app.instance = instanceApp(app)
+
+  if (!existsFunction(app, action.functionName, action.args, action.options.new)){
+    return;
+  }
+
+  return app;
 }
 
 export {
