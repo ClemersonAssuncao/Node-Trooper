@@ -1,15 +1,14 @@
-import { Command } from '@commander-js/extra-typings';
-import { add as addAppCommand } from './src/tasks/app';
-import chalk from 'chalk';
+import { setup as setupLogger } from "./src/logger";
+import { setup as setupCommander } from "./src/application/cli";
 
-chalk.level = 3;
 declare global {
   var __basedir: string;
 }
 global.__basedir = __dirname;
 
+function run() {
+  void setupLogger();
+  void setupCommander();
+}
 
-const cli = new Command();
-addAppCommand(cli);
-
-cli.parse(process.argv);
+run();

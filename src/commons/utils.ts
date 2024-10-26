@@ -1,18 +1,3 @@
-const reservedWords = [
-  'abstract', 'app', 'arguments', 'await', 'boolean', 'break', 'byte', 'case', 'catch', 
-  'char', 'class', 'const', 'continue', 'debugger', 'default', 'delete', 'do', 
-  'double', 'else', 'enum', 'eval', 'export', 'extends', 'false', 'final', 'finally', 
-  'float', 'for', 'function', 'goto', 'if', 'implements', 'import', 'in', 
-  'instanceof', 'int', 'interface', 'let', 'long', 'native', 'new', 'null', 
-  'package', 'private', 'protected', 'public', 'return', 'short', 'static', 'super', 
-  'switch', 'synchronized', 'this', 'throw', 'throws', 'transient', 'true', 'try', 
-  'typeof', 'var', 'void', 'volatile', 'while', 'with', 'yield'
-];
-
-function isReservedWord(value: string) {
-  return reservedWords.includes(value);
-}
-
 function arrayToObject(params: string[]): any[] {
   const result: any = {};
   for (let i = 0; i < params.length; i += 2) {
@@ -32,19 +17,6 @@ function arrayToObject(params: string[]): any[] {
   return result;
 }
 
-function getFunctionParameters(func: Function): string[]|void{
-  const funcString = func.toString();
-  const funcMatch = funcString.match(/\(([^)]*)\)/);
-  
-  if (funcMatch){ 
-    const paramsString = funcMatch[1];
-    return paramsString.split(',').map(param => param.trim()).filter(param => param != 'app');
-  }  
-}
-
-
 export {
-  arrayToObject,
-  isReservedWord,
-  getFunctionParameters
+  arrayToObject
 }

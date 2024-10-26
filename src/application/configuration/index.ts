@@ -1,16 +1,14 @@
-import { App, AppConfig } from "../../commons/types";
+import { App, AppConfig } from "../types";
 import { arrayToObject } from "../../commons/utils";
 import fs from 'fs';
 import path from 'path';
 
 const FILE_NAME = 'config.json';
-const FILE_PATH = process.env.APPDATA + '/NodeTrooper/';
 
-function load(app: App, options: any): AppConfig {
+function setup(app: App, options: any): AppConfig {
   const appConfig: AppConfig = {
-    filePath: path.join(FILE_PATH, app.name)
+    filePath: path.join(__basedir, 'apps', app.name),
   };
-  
   appConfig.values = loadFile(appConfig);
 
   for (const option in options) {
@@ -51,25 +49,22 @@ function remove(appConfig: AppConfig, options: any): void {
 }
 
 function loadFile(appConfig: AppConfig): any{
-  const fileDir = path.join(appConfig.filePath, FILE_NAME);
 
-  if (!fs.existsSync(fileDir)){
+  if (!fs.existsSync(appConfig.filePath)){
     fs.mkdirSync(appConfig.filePath, { recursive: true });
     return {};
   }
 
-  const data = fs.readFileSync(fileDir, 'utf8');
+  const data = fs.readFileSync(path.join(appConfig.filePath,FILE_NAME), 'utf8');
   return JSON.parse(data);
 }
 
 function save(appConfig:AppConfig){
-  const fileDir = path.join(appConfig.filePath, FILE_NAME);
-
-  fs.writeFileSync(fileDir, JSON.stringify(appConfig.values));
+  fs.writeFileSync(path.join(appConfig.filePath,FILE_NAME), JSON.stringify(appConfig.values));
 }
 
 export {
   apply,
   remove,
-  load
+  setup
 }
